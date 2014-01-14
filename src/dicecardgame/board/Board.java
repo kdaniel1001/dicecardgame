@@ -15,6 +15,10 @@ public class Board
     private String diamonds;
     private String spades;
 
+    // keep around for debugging. Remove before deployment.
+    /**
+     * @TODO: remove before deployment.
+     */
     private ArrayList<String> suits = new ArrayList<String>();;
 
     // placer vars used to hold high/low card for suit.
@@ -36,10 +40,11 @@ public class Board
 
     }
 
-    public Board(String[] board) throws InvalidBoard{
+    public Board(String[] board) throws InvalidBoard
+    {
         addBoard(board);
     }
-    
+
     /**
      * Takes in a string array of the suit lines in the input file.
      * 
@@ -60,6 +65,7 @@ public class Board
                     clubs = line;
                     lowClub = lowCard;
                     highClub = highCard;
+                    suits.add(clubs);
                 }
             }
             else if (line.startsWith(Card.Suit.DIAMONDS.getString()))
@@ -69,6 +75,7 @@ public class Board
                     diamonds = line;
                     lowDiamond = lowCard;
                     highDiamond = highCard;
+                    suits.add(diamonds);
                 }
             }
             else if (line.startsWith(Card.Suit.HEARTS.getString()))
@@ -78,6 +85,8 @@ public class Board
                     hearts = line;
                     lowHeart = lowCard;
                     highHeart = highCard;
+                    suits.add(hearts);
+
                 }
             }
             else if (line.startsWith(Card.Suit.SPADES.getString()))
@@ -87,10 +96,11 @@ public class Board
                     spades = line;
                     lowSpade = lowCard;
                     highSpade = highCard;
+                    suits.add(spades);
+
                 }
             }
         }
-        suits.add(clubs);
     }
 
     /**
@@ -279,4 +289,38 @@ public class Board
         return highHeart;
     }
 
+    public ArrayList<Card> getPlayedCards() {
+        ArrayList<Card> playedCards = new ArrayList<>();
+
+        if (lowClub != null && highClub != null)
+            playedCards.addAll(computeSuitPlayedCards(lowClub, highClub));
+        if (lowHeart != null && highHeart != null)
+            playedCards.addAll(computeSuitPlayedCards(lowHeart, highHeart));
+        if (lowDiamond != null && highDiamond != null)
+            playedCards.addAll(computeSuitPlayedCards(lowDiamond, highDiamond));
+        if (lowSpade != null && highSpade != null)
+            playedCards.addAll(computeSuitPlayedCards(lowSpade, highSpade));
+
+        return playedCards;
+    }
+
+    private Collection<? extends Card> computeSuitPlayedCards(Card low,
+            Card high) {
+        ArrayList<Card> playedCards = new ArrayList<>();
+        playedCards.add(low);
+        // if the low card is a 7 then there isn't a high card. they are both
+        // the same.
+        if (low.getRank() != 7)
+        {
+            Card temp = Card.getNextHighest(low);
+            while (!temp.toString().equals(high.toString()))
+            {
+                playedCards.add(temp);
+                temp = Card.getNextHighest(temp);
+            }
+            // add the high card
+            playedCards.add(high);
+        }
+        return playedCards;
+    }
 }

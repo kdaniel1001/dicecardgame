@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import dicecardgame.board.Board;
+import dicecardgame.card.Card;
 import dicecardgame.exceptions.InvalidBoard;
 import dicecardgame.exceptions.InvalidCard;
 import dicecardgame.hand.Hand;
@@ -66,6 +68,27 @@ public class InputFile
                 Hand hand = new Hand(handString);
                 Board board = new Board(suitString);
                 
+                try
+                {
+                    ArrayList<Card> playableCards = board.getPlayedCards();
+                    ArrayList<Card> handCards = hand.getCards();
+                    for (Card handCard : handCards)
+                    {
+                        for (Card playCard : playableCards)
+                        {
+                            if (playCard.toString().equals(handCard.toString()))
+                            {
+                                flag = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         }
         return flag;
