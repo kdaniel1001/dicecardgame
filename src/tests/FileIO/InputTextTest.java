@@ -40,7 +40,28 @@ public class InputTextTest
         }
         catch (InvalidBoard e)
         {
-            fail("Invalid played car line: " + inputFile.getSuits());
+            fail("Invalid played card line: " + inputFile.getSuits());
+        }
+        inputFile = new InputFile("BadInput.txt");
+        try
+        {
+            if (inputFile.isValid())
+            {
+                fail("The test should fail");
+            }
+        }
+        catch (IOException e)
+        {
+            fail("File " + fileName + " can't be read ");
+        }
+        catch (InvalidCard e)
+        {
+            fail("Invalid card found in hand line: "
+                    + inputFile.getHandString());
+        }
+        catch (InvalidBoard e)
+        {
+            // this test should thrown a exception. So this is good.
         }
     }
 
@@ -52,7 +73,7 @@ public class InputTextTest
             inputFile.isValid();
 
             assertEquals(inputFile.getHandString(),
-                    "4H 5H 7D AC QH 9D 3S JH KC 7C KH 8D QD");
+                    "AC QH 9D 3S JH KC 7C KH 8D QD");
         }
         catch (IOException e)
         {

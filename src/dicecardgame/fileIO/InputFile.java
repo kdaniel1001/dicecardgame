@@ -70,18 +70,25 @@ public class InputFile
                 
                 try
                 {
-                    ArrayList<Card> playableCards = board.getPlayedCards();
+                    ArrayList<Card> playedCards = board.getPlayedCards();
                     ArrayList<Card> handCards = hand.getCards();
+                    ArrayList<Card> badCards = new ArrayList<>();
+                    
                     for (Card handCard : handCards)
                     {
-                        for (Card playCard : playableCards)
+                        for (Card playCard : playedCards)
                         {
                             if (playCard.toString().equals(handCard.toString()))
                             {
                                 flag = false;
+                                badCards.add(playCard);
                                 break;
                             }
                         }
+                    }
+                    if (!badCards.isEmpty())
+                    {
+                        throw new InvalidBoard("These cards have already been played but they are also in my hand: " + badCards.toString());
                     }
                 }
                 catch (Exception e)
